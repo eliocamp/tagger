@@ -1,0 +1,22 @@
+Package: tagger
+Title: Adds tags to 'ggpot2' facets
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Elio",
+           family = "Campitelli",
+           role = c("cre", "aut"),
+           email = "elio.campitelli@cima.fcen.uba.ar",
+           comment = c(ORCID = "0000-0002-7742-9230"))
+Description: Adds tags to 'ggplot2' facets with a single function and with native 'ggplot2' syntax.
+License: GPL-3
+Encoding: UTF-8
+Language: en
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    grDevices,
+    gridtext,
+    grid,
+    ggplot2,
+    gtable
