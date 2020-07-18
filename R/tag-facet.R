@@ -140,7 +140,7 @@ print.ggtagged <- function(x, newpage = is.null(vp), vp = NULL, ...) {
       theme$strip.text$size <- as.numeric(theme$strip.text$size*theme$text$size)
    }
 
-   tag_style <- theme$tagged.panel.tag.text %||% theme$strip.text %||% theme$text
+   tag_style <- theme$tagger.panel.tag.text %||% theme$strip.text %||% theme$text
 
    tag_gpar <- list(col = tag_style$colour,
                     family = tag_style$family,
@@ -150,7 +150,7 @@ print.ggtagged <- function(x, newpage = is.null(vp), vp = NULL, ...) {
    tag_gpar <- tag_gpar[lengths(tag_gpar) != 0]
    tag_gpar <- do.call(grid::gpar, tag_gpar)
 
-   box <- theme$tagged.panel.tag.background %||% theme$strip.background %||% theme$rect
+   box <- theme$tagger.panel.tag.background %||% theme$strip.background %||% theme$rect
    box_gp <-  grid::gpar(col = box$colour, fill = box$fill, lty = box$linetype, lwd = box$size)
 
    x <-  tag_options$position$x
