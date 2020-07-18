@@ -84,10 +84,22 @@ ggplot_add.tagger <- function(object, plot, object_name) {
 }
 
 `%||%` <- function(a, b) {
-   # if (length(a) == 0) return(b)
+   if (length(a) == 0) return(a)
    nulls <- lengths(a) == 0
+   if (all(nulls[-length(nulls)])) return(b)
    a[nulls] <- b[nulls]
    a
+}
+
+as.element_text <- function(x) {
+   if (length(x) == 0) return(ggplot2::element_text())
+   return(x)
+}
+
+
+as.element_rect <- function(x) {
+   if (length(x) == 0) return(ggplot2::element_rect())
+   return(x)
 }
 
 #' @export
@@ -140,7 +152,7 @@ print.ggtagged <- function(x, newpage = is.null(vp), vp = NULL, ...) {
       theme$strip.text$size <- as.numeric(theme$strip.text$size*theme$text$size)
    }
 
-   tag_style <- theme$tagger.panel.tag.text %||% theme$strip.text %||% theme$text
+   tag_style <- theme$tagger.panel.tag.text %||% as.element_text(theme$strip.text) %||% theme$text
 
    tag_gpar <- list(col = tag_style$colour,
                     family = tag_style$family,
