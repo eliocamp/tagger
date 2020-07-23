@@ -129,9 +129,15 @@ as.element_rect <- function(x) {
 #' @importFrom ggplot2 ggplot_build
 ggplot_build.ggtagged <- function(plot) {
    gb <- NextMethod("ggplot_build")
-   class(gb) <- c("ggplot_build_ggtagged", class(gb))
+   gb <- add_class(gb, "ggplot_build_ggtagged")
    gb
 }
+
+add_class <- function(object, class) {
+   class(object) <- c(class, setdiff(class(object), class))
+   return(object)
+}
+
 
 #' @export
 #' @importFrom ggplot2 ggplot_gtable
