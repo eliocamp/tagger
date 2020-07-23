@@ -52,10 +52,14 @@
 #'          tagger.panel.tag.background = element_rect(fill = "purple"))
 #'
 #' @export
+#' @import checkmate
 tag_facets <- function(tag = c("panel", "rc", "cr"), position = "tl",
                        tag_levels = c("a", "1"), tag_pool = NULL, tag_prefix = "",
                        tag_suffix = ")", tag_sep = ".") {
+
    if (!is.list(position)) {
+      assert_choice(position, c("tl", "tr", "bl", "br"))
+
       position <- switch(position,
                          tl = list(x = 0, y = 1, hjust = 0, vjust = 1),
                          tr = list(x = 1, y = 1, hjust = 1, vjust = 1),
@@ -64,11 +68,29 @@ tag_facets <- function(tag = c("panel", "rc", "cr"), position = "tl",
                          position)
    }
 
+   position$hjust <- if (!is.null(position$hjust)) position$hjust else 0.5
+   position$vjust <- if (!is.null(position$vjust)) position$vjust else 0.5
+
+   checks <- makeAssertCollection()
+
+
+   assert_list(position, types = "numeric", len = 4, add = checks)
+   assert_names(names(position), must.include = c("x", "y", "hjust", "vjust"),
+                .var.name = "position", add = checks)
+
+   assert_choice(tag[1], c("panel", "rc", "cr"), add = checks)
+   assert_character(tag_prefix, any.missing = FALSE, len = 1, add = checks)
+   assert_character(tag_suffix, any.missing = FALSE, len = 1, add = checks)
+   assert_character(tag_sep, any.missing = FALSE, len = 1, add = checks)
+
    tag <- switch(tag[1],
                  rc = c("ROW", "COL"),
                  cr = c("COL", "ROW"),
-                 panel = "PANEL",
-                 stop("invalid tag"))
+                 panel = "PANEL")
+
+   assert_character(tag_levels, any.missing = FALSE, min.len = length(tag), add = checks)
+   reportAssertions(checks)
+
 
    structure(list(tag = tag, tag_pool = tag_pool, tag_levels = tag_levels, open = tag_prefix,
                   close = tag_suffix, tag_sep = tag_sep, position = position),

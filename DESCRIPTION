@@ -19,4 +19,5 @@ Imports:
     gridtext,
     grid,
     ggplot2,
-    gtable
+    gtable,
+    checkmate
