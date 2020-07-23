@@ -37,7 +37,7 @@
 #' g + tag_facets("rc", tag_levels  = c("A", "I"))
 #'
 #' # You can get finer control over position.
-#' g + tag_facets(position = list(x = 0.5, y = 0.5, hjust = 0, vjust = 0))
+#' g + tag_facets(position = list(x = 0.5, y = 0.5))
 #'
 #' g + tag_facets(tag_pool = c("one", "two", "three", "four", "five", "six"), tag_suffix = "")
 #' # Thanks to theme inheritance, tags should look aceptable
@@ -101,7 +101,7 @@ tag_facets <- function(tag = c("panel", "rc", "cr"), position = "tl",
 #' @importFrom ggplot2 ggplot_add
 ggplot_add.tagger <- function(object, plot, object_name) {
    class(plot) <- c("ggtagged", class(plot))
-   attr(plot, "tag_options") <- object
+   plot$tag_options <- object
    plot
 }
 
@@ -124,25 +124,23 @@ as.element_rect <- function(x) {
    return(x)
 }
 
+
 #' @export
-print.ggtagged <- function(x, newpage = is.null(vp), vp = NULL, ...) {
-   ggplot2::set_last_plot(x)
-   if (newpage) grid::grid.newpage()
+#' @importFrom ggplot2 ggplot_build
+ggplot_build.ggtagged <- function(plot) {
+   gb <- NextMethod("ggplot_build")
+   class(gb) <- c("ggplot_build_ggtagged", class(gb))
+   gb
+}
 
-   # Record dependency on 'ggplot2' on the display list
-   # (AFTER grid.newpage())
-   grDevices::recordGraphics(
-      requireNamespace("ggplot2", quietly = TRUE),
-      list(),
-      getNamespace("ggplot2")
-   )
+#' @export
+#' @importFrom ggplot2 ggplot_gtable
+ggplot_gtable.ggplot_build_ggtagged <- function(data) {
+   gt <- NextMethod("ggplot_gtable")
 
-   tag_options <- attr(x, "tag_options")
+   tag_options <- data$plot$tag_options
 
-
-   gb <- ggplot2::ggplot_build(x)
-   gt <- ggplot2::ggplot_gtable(gb)
-   lay <- gb$layout$layout
+   lay <- data$layout$layout
    lay <- lay[order(lay$COL, lay$ROW), ]
    facet_vars <- lay[toupper(tag_options$tag)]
    facet_vars <- lapply(facet_vars, function(x) as.numeric(as.factor(x)))
@@ -168,7 +166,7 @@ print.ggtagged <- function(x, newpage = is.null(vp), vp = NULL, ...) {
    facet_tags <- Reduce(function(a, b) paste(a, b, sep = tag_options$tag_sep), facet_tags)
    facet_tags <- paste0(tag_options$open, facet_tags, tag_options$close)
 
-   theme <- ggplot2:::plot_theme(x)
+   theme <- ggplot2:::plot_theme(data$plot)
 
    tag_style <- ggplot2::calc_element("tagger.panel.tag.text", theme, verbose = FALSE, skip_blank = FALSE)
    tag_gpar <- list(col = tag_style$colour,
@@ -206,17 +204,5 @@ print.ggtagged <- function(x, newpage = is.null(vp), vp = NULL, ...) {
       gt <- gtable::gtable_add_grob(gt, tagGrob, t = this_panel$t, l = this_panel$l, clip = "on", z = 2)
    }
 
-   if (is.null(vp)) {
-      grid::grid.draw(gt)
-   } else {
-      if (is.character(vp)) grid::seekViewport(vp) else grid::pushViewport(vp)
-      grid::grid.draw(gt)
-      grid::upViewport()
-   }
-
-   invisible(x)
+   return(gt)
 }
-
-#' @export
-plot.ggtagged <- print.ggtagged
-
