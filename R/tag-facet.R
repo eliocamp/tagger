@@ -170,12 +170,7 @@ print.ggtagged <- function(x, newpage = is.null(vp), vp = NULL, ...) {
 
    theme <- ggplot2:::plot_theme(x)
 
-   if (inherits(theme$strip.text$size, "rel")) {
-      theme$strip.text$size <- as.numeric(theme$strip.text$size*theme$text$size)
-   }
-
-   tag_style <- theme$tagger.panel.tag.text %||% as.element_text(theme$strip.text) %||% theme$text
-
+   tag_style <- ggplot2::calc_element("tagger.panel.tag.text", theme, verbose = FALSE, skip_blank = FALSE)
    tag_gpar <- list(col = tag_style$colour,
                     family = tag_style$family,
                     fontface = tag_style$face,
@@ -184,7 +179,7 @@ print.ggtagged <- function(x, newpage = is.null(vp), vp = NULL, ...) {
    tag_gpar <- tag_gpar[lengths(tag_gpar) != 0]
    tag_gpar <- do.call(grid::gpar, tag_gpar)
 
-   box <- theme$tagger.panel.tag.background %||% theme$strip.background %||% theme$rect
+   box <- ggplot2::calc_element("tagger.panel.tag.background", theme, verbose = FALSE, skip_blank = FALSE)
    box_gp <-  grid::gpar(col = box$colour, fill = box$fill, lty = box$linetype, lwd = box$size)
 
    x <-  tag_options$position$x
