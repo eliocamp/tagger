@@ -231,10 +231,14 @@ asign_tags <- function(plot) {
 #' to generate the facets of the plot, evaluates to a logical vector
 #' or a sequence of rows.
 #' @param plot a plot object
+#' @param n number of expected panels.
 #'
 #' @return
-#' A data.frame with columns `PANEL`, containing the tag of each panel,
-#' `ROW`, `COL` and the variables used to create the facets.
+#' `get_layout()` returns a character vector of length `n` with the
+#' tags of the panels that meet the `filter` condition.
+#'
+#' `get_tags()` returns the full data.frame describing the panel layout.
+#'
 #'
 #' @examples
 #' library(ggplot2)
@@ -243,22 +247,48 @@ asign_tags <- function(plot) {
 #'   facet_grid(cyl ~ vs) +
 #'   tag_facets()
 #'
-#' get_tags()
+#' # Get all tags
+#' get_layout()
 #'
-#' get_tags(cyl == 4 & vs == 0)
+#' # Get one tag
+#' get_tag(cyl == 4 & vs == 0)
+#'
+#' # Get more than one tag
+#' get_tag(cyl == 4, n = 2)
 #'
 #' # Use it with inline markdown to refer always to the correct panel:
-#' # "As you can see in panel `r get_tags(cyl == 4 & vs == 0)$PANEL` ...
+#' # "As you can see in panel `r get_tag(cyl == 4 & vs == 0)` ..."
 #'
 #' @export
-get_tags <- function(filter = TRUE, plot = ggplot2::last_plot()) {
+get_layout <- function(plot = ggplot2::last_plot()) {
    if (!inherits(plot, "ggtagged")) {
-      stop("plot has no tags")
+      stop("The plot has no tags.")
    }
-
-   plot <- ggplot2::ggplot_build(plot)
+   plot <- ggplot_build_memoised(plot)
    lay <- asign_tags(plot)
    lay <- lay[, setdiff(colnames(lay), c("SCALE_X", "SCALE_Y"))]
 
-   lay[eval(substitute(filter), envir  = lay), ]
+   return(lay)
 }
+
+#' @export
+#' @rdname get_layout
+get_tag <- function(filter = TRUE, plot = ggplot2::last_plot(), n = 1) {
+   lay <- get_layout(plot = plot)
+   filter <- eval(substitute(filter), envir  = lay)
+   lay <- lay[filter, ]
+
+   if (nrow(lay) != n) {
+      stop("Returned ", nrow(lay),  ifelse(n == 1, " panel", " panels"),
+           " (expected ", n, ").")
+   }
+   lay$PANEL
+}
+
+if (requireNamespace("memoise", quietly = TRUE)) {
+   ggplot_build_memoised <- memoise::memoise(ggplot2::ggplot_build)
+} else {
+   ggplot_build_memoised <- ggplot2::ggplot_build
+}
+
+
