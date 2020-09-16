@@ -4,11 +4,34 @@
 \alias{get_tags}
 \title{Get labels asigned to each panel of a tagged plot}
 \usage{
-get_tags(plot = ggplot2::last_plot())
+get_tags(filter = TRUE, plot = ggplot2::last_plot())
 }
 \arguments{
+\item{filter}{an expression that, evaluated within the data used
+to generate the facets of the plot, evaluates to a logical vector
+or a sequence of rows.}
+
 \item{plot}{a plot object}
+}
+\value{
+A data.frame with columns \code{PANEL}, containing the tag of each panel,
+\code{ROW}, \code{COL} and the variables used to create the facets.
 }
 \description{
 Get labels asigned to each panel of a tagged plot
+}
+\examples{
+library(ggplot2)
+g <- ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  facet_grid(cyl ~ vs) +
+  tag_facets()
+
+get_tags()
+
+get_tags(cyl == 4 & vs == 0)
+
+# Use it with inline markdown to refer always to the correct panel:
+# "As you can see in panel `r get_tags(cyl == 4 & vs == 0)$PANEL` ...
+
 }
