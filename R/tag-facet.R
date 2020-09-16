@@ -144,33 +144,10 @@ add_class <- function(object, class) {
 ggplot_gtable.ggplot_build_ggtagged <- function(data) {
    gt <- NextMethod("ggplot_gtable")
 
+   lay <- asign_tags(data)
+   facet_tags <- lay$PANEL
+
    tag_options <- data$plot$tag_options
-
-   lay <- data$layout$layout
-   lay <- lay[order(lay$COL, lay$ROW), ]
-   facet_vars <- lay[toupper(tag_options$tag)]
-   facet_vars <- lapply(facet_vars, function(x) as.numeric(as.factor(x)))
-   tag_options$tag_levels <- rep_len(tag_options$tag_levels, length.out = length(facet_vars))
-   facet_tags <- lapply(seq_along(facet_vars), function(i) {
-      i_panels <- facet_vars[[i]]
-      if (is.null(tag_options$tag_pool[[i]])) {
-         tag_pool <- switch(tag_options$tag_levels[i],
-                            a = letters[i_panels],
-                            A = LETTERS[i_panels],
-                            "1" = i_panels,
-                            "i" = tolower(utils::as.roman(i_panels)),
-                            "I" = utils::as.roman(i_panels),
-                            stop("tag_levels is not valid")
-         )
-
-      } else {
-         tag_pool <- tag_options$tag_pool[i_panels]
-      }
-      return(tag_pool)
-   })
-
-   facet_tags <- Reduce(function(a, b) paste(a, b, sep = tag_options$tag_sep), facet_tags)
-   facet_tags <- paste0(tag_options$open, facet_tags, tag_options$close)
 
    theme <- ggplot2:::plot_theme(data$plot)
 
@@ -211,4 +188,56 @@ ggplot_gtable.ggplot_build_ggtagged <- function(data) {
    }
 
    return(gt)
+}
+
+
+asign_tags <- function(plot) {
+
+   tag_options <- plot$plot$tag_options
+
+   lay <- plot$layout$layout
+   lay <- lay[order(lay$COL, lay$ROW), ]
+   facet_vars <- lay[toupper(tag_options$tag)]
+   facet_vars <- lapply(facet_vars, function(x) as.numeric(as.factor(x)))
+   tag_options$tag_levels <- rep_len(tag_options$tag_levels, length.out = length(facet_vars))
+   facet_tags <- lapply(seq_along(facet_vars), function(i) {
+      i_panels <- facet_vars[[i]]
+      if (is.null(tag_options$tag_pool[[i]])) {
+         tag_pool <- switch(tag_options$tag_levels[i],
+                            a = letters[i_panels],
+                            A = LETTERS[i_panels],
+                            "1" = i_panels,
+                            "i" = tolower(utils::as.roman(i_panels)),
+                            "I" = utils::as.roman(i_panels),
+                            stop("tag_levels is not valid")
+         )
+
+      } else {
+         tag_pool <- tag_options$tag_pool[i_panels]
+      }
+      return(tag_pool)
+   })
+
+   facet_tags <- Reduce(function(a, b) paste(a, b, sep = tag_options$tag_sep), facet_tags)
+   facet_tags <- paste0(tag_options$open, facet_tags, tag_options$close)
+
+   lay[["PANEL"]] <- facet_tags
+   return(lay)
+}
+
+#' Get labels asigned to each panel of a tagged plot
+#'
+#'
+#' @param plot a plot object
+#'
+#'
+#' @export
+get_tags <- function(plot = ggplot2::last_plot()) {
+   if (!inherits(plot, "ggtagged")) {
+      stop("plot has no tags")
+   }
+
+   plot <- ggplot2::ggplot_build(plot)
+   lay <- asign_tags(plot)
+   lay[, setdiff(colnames(lay), c("SCALE_X", "SCALE_Y"))]
 }

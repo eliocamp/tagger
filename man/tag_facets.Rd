@@ -66,7 +66,7 @@ g + tag_facets(position = "br")
 g + tag_facets("rc", tag_levels  = c("A", "I"))
 
 # You can get finer control over position.
-g + tag_facets(position = list(x = 0.5, y = 0.5, hjust = 0, vjust = 0))
+g + tag_facets(position = list(x = 0.5, y = 0.5))
 
 g + tag_facets(tag_pool = c("one", "two", "three", "four", "five", "six"), tag_suffix = "")
 # Thanks to theme inheritance, tags should look aceptable

@@ -3,6 +3,7 @@
 S3method(ggplot_add,tagger)
 S3method(ggplot_build,ggtagged)
 S3method(ggplot_gtable,ggplot_build_ggtagged)
+export(get_tags)
 export(tag_facets)
 import(checkmate)
 importFrom(ggplot2,ggplot_add)
