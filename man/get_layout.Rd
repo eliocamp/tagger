@@ -3,11 +3,17 @@
 \name{get_layout}
 \alias{get_layout}
 \alias{get_tag}
+\alias{get_row}
+\alias{get_col}
 \title{Get labels asigned to each panel of a tagged plot}
 \usage{
 get_layout(plot = ggplot2::last_plot())
 
 get_tag(filter = TRUE, plot = ggplot2::last_plot(), n = 1)
+
+get_row(filter = TRUE, plot = ggplot2::last_plot(), n = 1)
+
+get_col(filter = TRUE, plot = ggplot2::last_plot(), n = 1)
 }
 \arguments{
 \item{plot}{a plot object}
@@ -19,10 +25,11 @@ or a sequence of rows.}
 \item{n}{number of expected panels.}
 }
 \value{
-\code{get_layout()} returns a character vector of length \code{n} with the
-tags of the panels that meet the \code{filter} condition.
+\code{get_tags()}, \code{get_row()} and \code{get_col()} return a character vector
+of length \code{n} with the tags, unique rows or unique columns that meet
+the \code{filter} condition.
 
-\code{get_tags()} returns the full data.frame describing the panel layout.
+\code{get_layout()} returns the full data.frame describing the panel layout.
 }
 \description{
 Get labels asigned to each panel of a tagged plot
@@ -32,7 +39,7 @@ library(ggplot2)
 g <- ggplot(mtcars, aes(hp, mpg)) +
   geom_point() +
   facet_grid(cyl ~ vs) +
-  tag_facets()
+  tag_facets("cr")
 
 # Get all tags
 get_layout()
@@ -42,6 +49,10 @@ get_tag(cyl == 4 & vs == 0)
 
 # Get more than one tag
 get_tag(cyl == 4, n = 2)
+
+
+get_row(cyl == 4)
+get_col(vs == 0)
 
 # Use it with inline markdown to refer always to the correct panel:
 # "As you can see in panel `r get_tag(cyl == 4 & vs == 0)` ..."

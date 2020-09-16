@@ -220,7 +220,12 @@ asign_tags <- function(plot) {
       return(tag_pool)
    })
 
+   if (!identical(tag_options$tag, "PANEL")) {
+      lay[tag_options$tag] <- facet_tags
+   }
+
    facet_tags <- Reduce(function(a, b) paste(a, b, sep = tag_options$tag_sep), facet_tags)
+
    lay[["PANEL"]] <- facet_tags
    return(lay)
 }
@@ -234,10 +239,11 @@ asign_tags <- function(plot) {
 #' @param n number of expected panels.
 #'
 #' @return
-#' `get_layout()` returns a character vector of length `n` with the
-#' tags of the panels that meet the `filter` condition.
+#' `get_tags()`, `get_row()` and `get_col()` return a character vector
+#' of length `n` with the tags, unique rows or unique columns that meet
+#' the `filter` condition.
 #'
-#' `get_tags()` returns the full data.frame describing the panel layout.
+#' `get_layout()` returns the full data.frame describing the panel layout.
 #'
 #'
 #' @examples
@@ -245,7 +251,7 @@ asign_tags <- function(plot) {
 #' g <- ggplot(mtcars, aes(hp, mpg)) +
 #'   geom_point() +
 #'   facet_grid(cyl ~ vs) +
-#'   tag_facets()
+#'   tag_facets("cr")
 #'
 #' # Get all tags
 #' get_layout()
@@ -255,6 +261,10 @@ asign_tags <- function(plot) {
 #'
 #' # Get more than one tag
 #' get_tag(cyl == 4, n = 2)
+#'
+#'
+#' get_row(cyl == 4)
+#' get_col(vs == 0)
 #'
 #' # Use it with inline markdown to refer always to the correct panel:
 #' # "As you can see in panel `r get_tag(cyl == 4 & vs == 0)` ..."
@@ -291,4 +301,32 @@ if (requireNamespace("memoise", quietly = TRUE)) {
    ggplot_build_memoised <- ggplot2::ggplot_build
 }
 
+#' @export
+#' @rdname get_layout
+get_row <- function(filter = TRUE, plot = ggplot2::last_plot(), n = 1) {
+   lay <- get_layout(plot = plot)
+   filter <- eval(substitute(filter), envir  = lay)
+   lay <- lay[filter, ]
 
+   row <- unique(lay$ROW)
+   if (length(row) != n) {
+      stop("Returned ", length(row), ifelse(n == 1, " panel", " panels"),
+           " (expected ", n, ").")
+   }
+   row
+}
+
+#' @export
+#' @rdname get_layout
+get_col <- function(filter = TRUE, plot = ggplot2::last_plot(), n = 1) {
+   lay <- get_layout(plot = plot)
+   filter <- eval(substitute(filter), envir  = lay)
+   lay <- lay[filter, ]
+
+   col <- unique(lay$COL)
+   if (length(col) != n) {
+      stop("Returned ", length(col), ifelse(n == 1, " panel", " panels"),
+           " (expected ", n, ").")
+   }
+   col
+}
