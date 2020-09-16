@@ -149,6 +149,8 @@ ggplot_gtable.ggplot_build_ggtagged <- function(data) {
 
    tag_options <- data$plot$tag_options
 
+   facet_tags <- paste0(tag_options$open, facet_tags, tag_options$close)
+
    theme <- ggplot2:::plot_theme(data$plot)
 
    tag_style <- ggplot2::calc_element("tagger.panel.tag.text", theme, verbose = FALSE, skip_blank = FALSE)
@@ -219,8 +221,6 @@ asign_tags <- function(plot) {
    })
 
    facet_tags <- Reduce(function(a, b) paste(a, b, sep = tag_options$tag_sep), facet_tags)
-   facet_tags <- paste0(tag_options$open, facet_tags, tag_options$close)
-
    lay[["PANEL"]] <- facet_tags
    return(lay)
 }
