@@ -39,7 +39,10 @@ library(ggplot2)
 g <- ggplot(mtcars, aes(hp, mpg)) +
   geom_point() +
   facet_grid(cyl ~ vs) +
-  tag_facets("cr")
+  tag_facets("rc")
+
+# By default these functions retrieve tags from
+# the result of ggplo2::last_plot().
 
 # Get all tags
 get_layout()

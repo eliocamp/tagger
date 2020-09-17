@@ -144,7 +144,7 @@ add_class <- function(object, class) {
 ggplot_gtable.ggplot_build_ggtagged <- function(data) {
    gt <- NextMethod("ggplot_gtable")
 
-   lay <- asign_tags(data)
+   lay <- assign_tags(data)
    facet_tags <- lay$PANEL
 
    tag_options <- data$plot$tag_options
@@ -193,7 +193,7 @@ ggplot_gtable.ggplot_build_ggtagged <- function(data) {
 }
 
 
-asign_tags <- function(plot) {
+assign_tags <- function(plot) {
 
    tag_options <- plot$plot$tag_options
 
@@ -251,7 +251,10 @@ asign_tags <- function(plot) {
 #' g <- ggplot(mtcars, aes(hp, mpg)) +
 #'   geom_point() +
 #'   facet_grid(cyl ~ vs) +
-#'   tag_facets("cr")
+#'   tag_facets("rc")
+#'
+#' # By default these functions retrieve tags from
+#' # the result of ggplo2::last_plot().
 #'
 #' # Get all tags
 #' get_layout()
@@ -275,7 +278,7 @@ get_layout <- function(plot = ggplot2::last_plot()) {
       stop("The plot has no tags.")
    }
    plot <- ggplot_build_memoised(plot)
-   lay <- asign_tags(plot)
+   lay <- assign_tags(plot)
    lay <- lay[, setdiff(colnames(lay), c("SCALE_X", "SCALE_Y"))]
 
    return(lay)
