@@ -9,11 +9,11 @@
 \usage{
 get_layout(plot = ggplot2::last_plot())
 
-get_tag(filter = TRUE, plot = ggplot2::last_plot(), n = 1)
+get_tag(filter = TRUE, layout = last_layout(), n = 1)
 
-get_row(filter = TRUE, plot = ggplot2::last_plot(), n = 1)
+get_row(filter = TRUE, layout = last_layout(), n = 1)
 
-get_col(filter = TRUE, plot = ggplot2::last_plot(), n = 1)
+get_col(filter = TRUE, layout = last_layout(), n = 1)
 }
 \arguments{
 \item{plot}{a plot object}
