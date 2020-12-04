@@ -30,10 +30,7 @@ Alternatively, for finer control, it can be a list of elements "x", "u",
 \item{tag_levels}{A character vector defining the enumeration format to use
 at each level. Possible values are \code{'a'} for lowercase letters, \code{'A'} for
 uppercase letters, \code{'1'} for numbers, \code{'i'} for lowercase Roman numerals, and
-\code{'I'} for uppercase Roman numerals. It can also be a list containing
-character vectors defining arbitrary tag sequences. If any element in the
-list is a scalar and one of \code{'a'}, \code{'A'}, \code{'1'}, \verb{'i}, or \code{'I'}, this level
-will be expanded to the expected sequence.}
+\code{'I'} for uppercase Roman numerals.}
 
 \item{tag_pool}{An optional character vector of user-defined "pool" of tags.
 If not \code{NULL}, it will be used instead of \code{tag_levels}. Should be at least

@@ -147,12 +147,6 @@ ggplot_gtable.ggplot_build_ggtagged <- function(data) {
    lay <- assign_tags(data)
    facet_tags <- lay$PANEL
 
-   cache <- getOption("tagger.cache", default = FALSE)
-   if (cache) {
-      assign(".Last.layout", lay[, setdiff(colnames(lay), c("SCALE_X", "SCALE_Y"))],
-             envir = globalenv())
-   }
-
    tag_options <- data$plot$tag_options
 
    facet_tags <- paste0(tag_options$open, facet_tags, tag_options$close)
@@ -291,25 +285,17 @@ get_layout <- function(plot = ggplot2::last_plot()) {
 }
 
 #' @export
-last_layout <- function() {
-   if (exists(".Last.layout")) {
-      return(.Last.layout)
-   } else {
-      return(get_layout(ggplot2::last_plot()))
-   }
-}
-
-#' @export
 #' @rdname get_layout
-get_tag <- function(filter = TRUE, layout = last_layout(), n = 1) {
-   filter <- eval(substitute(filter), envir  = layout)
-   layout <- layout[filter, ]
+get_tag <- function(filter = TRUE, plot = ggplot2::last_plot(), n = 1) {
+   lay <- get_layout(plot = plot)
+   filter <- eval(substitute(filter), envir  = lay)
+   lay <- lay[filter, ]
 
-   if (nrow(layout) != n) {
-      stop("Returned ", nrow(layout),  ifelse(n == 1, " panel", " panels"),
+   if (nrow(lay) != n) {
+      stop("Returned ", nrow(lay),  ifelse(n == 1, " panel", " panels"),
            " (expected ", n, ").")
    }
-   layout$PANEL
+   lay$PANEL
 }
 
 if (requireNamespace("memoise", quietly = TRUE)) {
@@ -320,11 +306,12 @@ if (requireNamespace("memoise", quietly = TRUE)) {
 
 #' @export
 #' @rdname get_layout
-get_row <- function(filter = TRUE, layout = last_layout(), n = 1) {
-   filter <- eval(substitute(filter), envir  = layout)
-   layout <- layout[filter, ]
+get_row <- function(filter = TRUE, plot = ggplot2::last_plot(), n = 1) {
+   lay <- get_layout(plot = plot)
+   filter <- eval(substitute(filter), envir  = lay)
+   lay <- lay[filter, ]
 
-   row <- unique(layout$ROW)
+   row <- unique(lay$ROW)
    if (length(row) != n) {
       stop("Returned ", length(row), ifelse(n == 1, " panel", " panels"),
            " (expected ", n, ").")
@@ -334,11 +321,12 @@ get_row <- function(filter = TRUE, layout = last_layout(), n = 1) {
 
 #' @export
 #' @rdname get_layout
-get_col <- function(filter = TRUE, layout = last_layout(), n = 1) {
-   filter <- eval(substitute(filter), envir  = layout)
-   layout <- layout[filter, ]
+get_col <- function(filter = TRUE, plot = ggplot2::last_plot(), n = 1) {
+   lay <- get_layout(plot = plot)
+   filter <- eval(substitute(filter), envir  = lay)
+   lay <- lay[filter, ]
 
-   col <- unique(layout$COL)
+   col <- unique(lay$COL)
    if (length(col) != n) {
       stop("Returned ", length(col), ifelse(n == 1, " panel", " panels"),
            " (expected ", n, ").")
