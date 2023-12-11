@@ -33,6 +33,7 @@
 #'
 #' g + tag_facets()
 #' g + tag_facets("rc")
+#' g + tag_facets("cr")
 #' g + tag_facets(position = "br")
 #' g + tag_facets("rc", tag_levels  = c("A", "I"))
 #'
@@ -143,9 +144,8 @@ add_class <- function(object, class) {
 #' @importFrom ggplot2 ggplot_gtable
 ggplot_gtable.ggplot_build_ggtagged <- function(data) {
    gt <- NextMethod("ggplot_gtable")
-
    lay <- assign_tags(data)
-   facet_tags <- lay$PANEL
+   facet_tags <- lay$TAG_PANEL
 
    tag_options <- data$plot$tag_options
 
@@ -170,7 +170,16 @@ ggplot_gtable.ggplot_build_ggtagged <- function(data) {
 
    hjust <- tag_options$position$hjust
    vjust <- tag_options$position$vjust
-   panels <- which(grepl("panel", gt$layout$name))
+
+   panels <- which(startsWith(gt$layout$name, "panel"))
+
+   # Panels are sorted top to bottom, left to right
+   panels <- c(matrix(panels, ncol = max(lay$ROW), nrow = max(lay$COL), byrow = TRUE))
+
+   # Remove empty panels
+   empty <- vapply(panels, function(p) inherits(gt$grobs[p][[1]], "zeroGrob"),
+                   FUN.VALUE = logical(1))
+   panels <- panels[!empty]
 
    grob_args <- list(x = x, y = y, hjust = hjust, vjust = vjust,
                      rot = tag_style$angle,
@@ -194,11 +203,11 @@ ggplot_gtable.ggplot_build_ggtagged <- function(data) {
 
 
 assign_tags <- function(plot) {
-
    tag_options <- plot$plot$tag_options
 
    lay <- plot$layout$layout
-   lay <- lay[order(lay$COL, lay$ROW), ]
+   o <- order(lay$ROW, lay$COL)
+   lay <- lay[o, ]
    facet_vars <- lay[toupper(tag_options$tag)]
    facet_vars <- lapply(facet_vars, function(x) as.numeric(as.factor(x)))
    tag_options$tag_levels <- rep_len(tag_options$tag_levels, length.out = length(facet_vars))
@@ -221,12 +230,14 @@ assign_tags <- function(plot) {
    })
 
    if (!identical(tag_options$tag, "PANEL")) {
-      lay[tag_options$tag] <- facet_tags
+      lay[paste0("TAG_", tag_options$tag)] <- facet_tags
    }
 
    facet_tags <- Reduce(function(a, b) paste(a, b, sep = tag_options$tag_sep), facet_tags)
 
-   lay[["PANEL"]] <- facet_tags
+   lay[["TAG_PANEL"]] <- facet_tags
+
+   lay[order(o), ]
    return(lay)
 }
 
@@ -295,7 +306,7 @@ get_tag <- function(filter = TRUE, plot = ggplot2::last_plot(), n = 1) {
       stop("Returned ", nrow(lay),  ifelse(n == 1, " panel", " panels"),
            " (expected ", n, ").")
    }
-   lay$PANEL
+   lay$TAG_PANEL
 }
 
 if (requireNamespace("memoise", quietly = TRUE)) {
@@ -311,7 +322,7 @@ get_row <- function(filter = TRUE, plot = ggplot2::last_plot(), n = 1) {
    filter <- eval(substitute(filter), envir  = lay)
    lay <- lay[filter, ]
 
-   row <- unique(lay$ROW)
+   row <- unique(lay$TAG_ROW)
    if (length(row) != n) {
       stop("Returned ", length(row), ifelse(n == 1, " panel", " panels"),
            " (expected ", n, ").")
@@ -326,7 +337,7 @@ get_col <- function(filter = TRUE, plot = ggplot2::last_plot(), n = 1) {
    filter <- eval(substitute(filter), envir  = lay)
    lay <- lay[filter, ]
 
-   col <- unique(lay$COL)
+   col <- unique(lay$TAG_COL)
    if (length(col) != n) {
       stop("Returned ", length(col), ifelse(n == 1, " panel", " panels"),
            " (expected ", n, ").")

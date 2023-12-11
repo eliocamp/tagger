@@ -30,16 +30,16 @@ Alternatively, for finer control, it can be a list of elements "x", "u",
 \item{tag_levels}{A character vector defining the enumeration format to use
 at each level. Possible values are \code{'a'} for lowercase letters, \code{'A'} for
 uppercase letters, \code{'1'} for numbers, \code{'i'} for lowercase Roman numerals, and
-\code{'I'} for uppercase Roman numerals.}
+\code{'I'} for uppercase Roman numerals. It can also be a list containing
+character vectors defining arbitrary tag sequences. If any element in the
+list is a scalar and one of \code{'a'}, \code{'A'}, \code{'1'}, \verb{'i}, or \code{'I'}, this level
+will be expanded to the expected sequence.}
 
 \item{tag_pool}{An optional character vector of user-defined "pool" of tags.
 If not \code{NULL}, it will be used instead of \code{tag_levels}. Should be at least
 as long as the total number of panels.}
 
-\item{tag_prefix}{Strings that should appear before or after the
-tag.}
-
-\item{tag_suffix}{Strings that should appear before or after the
+\item{tag_prefix, tag_suffix}{Strings that should appear before or after the
 tag.}
 
 \item{tag_sep}{A separator between different tag levels}
@@ -62,6 +62,7 @@ g <- ggplot(mtcars, aes(hp, mpg)) +
 
 g + tag_facets()
 g + tag_facets("rc")
+g + tag_facets("cr")
 g + tag_facets(position = "br")
 g + tag_facets("rc", tag_levels  = c("A", "I"))
 
