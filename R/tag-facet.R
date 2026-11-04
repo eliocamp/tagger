@@ -125,7 +125,7 @@ tag_facets <- function(
 
 #' @export
 #' @importFrom ggplot2 ggplot_add
-ggplot_add.tagger <- function(object, plot, object_name) {
+ggplot_add.tagger <- function(object, plot, ...) {
   class(plot) <- c("ggtagged", class(plot))
   plot$tag_options <- object
   plot
@@ -161,7 +161,7 @@ as.element_rect <- function(x) {
 
 #' @export
 #' @importFrom ggplot2 ggplot_build
-ggplot_build.ggtagged <- function(plot) {
+ggplot_build.ggtagged <- function(plot, ...) {
   gb <- NextMethod("ggplot_build")
   gb <- add_class(gb, "ggplot_build_ggtagged")
   gb
