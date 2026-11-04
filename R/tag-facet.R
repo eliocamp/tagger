@@ -41,7 +41,7 @@
 #' g + tag_facets(position = list(x = 0.5, y = 0.5))
 #'
 #' g + tag_facets(tag_pool = c("one", "two", "three", "four", "five", "six"), tag_suffix = "")
-#' # Thanks to theme inheritance, tags should look aceptable
+#' # Thanks to theme inheritance, tags should look acceptable
 #' # out of the box in any theme.
 #' g + tag_facets() +
 #'    theme_dark()

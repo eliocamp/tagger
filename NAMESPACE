@@ -9,6 +9,8 @@ export(get_row)
 export(get_tag)
 export(tag_facets)
 import(checkmate)
-importFrom(ggplot2,ggplot_add)
-importFrom(ggplot2,ggplot_build)
-importFrom(ggplot2,ggplot_gtable)
+importFrom(ggplot2,
+  ggplot_add,
+  ggplot_build,
+  ggplot_gtable
+)
