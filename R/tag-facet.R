@@ -3,7 +3,7 @@
 #' @param tag Character indicating the element to tag. Possible values are
 #' * "panel": each single panels is individually tag.
 #' * "rc": facets are tagged by row and then column.
-#' * "cr": factes are tagged by columns and then row.
+#' * "cr": facets are tagged by columns and then row.
 #'
 #' @param position Character indicating the position of the tag. Options are "tl"
 #'  (top-left), "tr" (top-right), "br" (bottom-right) and "bl" (bottom-left).
@@ -21,7 +21,7 @@
 #'
 #' Tags inherit aesthetic properties (size, font, colour, etc...) from strip.text and
 #' strip.background defined by [ggplot2::theme()]. For fine-grained detail, these can be
-#' overriden by setting tagger.panel.tag.text and tagger.panel.tag.background.
+#' overridden by setting tagger.panel.tag.text and tagger.panel.tag.background.
 #'
 #' @examples
 #'

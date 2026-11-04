@@ -19,7 +19,7 @@ tag_facets(
 \itemize{
 \item "panel": each single panels is individually tag.
 \item "rc": facets are tagged by row and then column.
-\item "cr": factes are tagged by columns and then row.
+\item "cr": facets are tagged by columns and then row.
 }}
 
 \item{position}{Character indicating the position of the tag. Options are "tl"
@@ -50,7 +50,7 @@ Adds tags to facets
 \details{
 Tags inherit aesthetic properties (size, font, colour, etc...) from strip.text and
 strip.background defined by \code{\link[ggplot2:theme]{ggplot2::theme()}}. For fine-grained detail, these can be
-overriden by setting tagger.panel.tag.text and tagger.panel.tag.background.
+overridden by setting tagger.panel.tag.text and tagger.panel.tag.background.
 }
 \examples{
 
