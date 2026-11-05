@@ -4,5 +4,5 @@ title: "Coverage report"
 
 
 ```{r, echo=FALSE}
-htmltools::includeHTML("vignettes/articles/coverage-widget.html")
+htmltools::includeHTML("coverage-widget.html")
 ```
