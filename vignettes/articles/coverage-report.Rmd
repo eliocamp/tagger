@@ -1,0 +1,8 @@
+---
+title: "Coverage report"
+---
+
+
+```{r, echo=FALSE}
+htmltools::includeHTML("coverage-widget.html")
+```

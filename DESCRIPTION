@@ -24,3 +24,4 @@ Language: en
 LazyData: true
 Roxygen: list(markdown = TRUE)
 URL: https://eliocamp.github.io/tagger/
+Config/Needs/website: rmarkdown
