@@ -1,3 +1,5 @@
+# This is effectively tested when testing for custom themes
+# nocov start
 .onLoad <- function(libname, pkgname) {
   ggplot2::register_theme_elements(
     tagger.panel.tag.text = ggplot2::element_text(),
@@ -14,3 +16,4 @@
     )
   )
 }
+# nocov end
