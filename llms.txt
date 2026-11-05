@@ -57,3 +57,9 @@ ggplot(mtcars, aes(hp, mpg)) +
 - [`tag_facets()`](https://eliocamp.github.io/tagger/reference/tag_facets.md)
   : Adds tags to facets
 
+# Articles
+
+### All vignettes
+
+- [Coverage
+  report](https://eliocamp.github.io/tagger/articles/coverage-report.md):
