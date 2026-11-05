@@ -7,7 +7,7 @@
 
 [![R-CMD-check](https://github.com/eliocamp/tagger/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eliocamp/tagger/actions/workflows/R-CMD-check.yaml)
 [![Test
-coverage](https://raw.githubusercontent.com/eliocamp/tagger/coverage/badges/coverage.svg)](https://github.com/eliocamp/tagger/actions/workflows/test-coverage.yaml)
+coverage](https://raw.githubusercontent.com/eliocamp/tagger/coverage/coverage.svg)](https://github.com/eliocamp/tagger/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
 The goal of tagger is to easily add tags to facetted plots in order to
