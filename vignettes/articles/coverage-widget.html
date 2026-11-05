@@ -141,13 +141,16 @@
     q("cov-chart").replaceChildren(svg);
   }
 
-  // The raw host serves HTML as text, so load it into the iframe via srcdoc.
+  // The raw host serves HTML as text, so fetch it and load it via a Blob URL.
+  // (srcdoc would make href="#" links resolve to the parent page and navigate
+  // the iframe to the article itself, duplicating the widget.)
   async function loadReport() {
     var msg = q("cov-msg"), frame = q("cov-report");
     try {
       var res = await fetch(RAW + "/report.html", { cache: "no-cache" });
       if (!res.ok) throw new Error("HTTP " + res.status);
-      frame.srcdoc = await res.text();
+      var html = await res.text();
+      frame.src = URL.createObjectURL(new Blob([html], { type: "text/html" }));
       frame.style.display = "block";
       msg.style.display = "none";
     } catch (e) {
