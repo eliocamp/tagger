@@ -3,8 +3,7 @@
 on:
   push:
     branches: [main, master]
-  pull_request:
-
+    
 name: test-coverage
 
 jobs:
@@ -76,31 +75,18 @@ jobs:
           sed -i "s/{{ COVERAGE }}/${COVERAGE}/g" badges/coverage.svg
 
       - name: Commit coverage badge
-        if: github.ref == 'refs/heads/main'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
 
-          # Save the badge file before switching branches
           cp badges/coverage.svg /tmp/coverage.svg
 
-          # Create or switch to coverage branch
-          git checkout -B coverage
-
-          # Remove everything except .git
+          git checkout --orphan coverage
           git rm -rf . || true
 
-          # Restore just the badge
           mkdir -p badges
           cp /tmp/coverage.svg badges/coverage.svg
           git add badges/coverage.svg
 
-          if ! git diff --staged --quiet; then
-            git commit -m "Update coverage badge"
-            git push --force origin coverage
-          else
-            echo "No changes to commit"
-          fi
-
-          # Switch back to main
-          git checkout main
+          git commit -m "Update coverage badge"
+          git push --force origin coverage
