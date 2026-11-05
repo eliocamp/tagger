@@ -223,6 +223,16 @@ ggplot_gtable.ggplot_build_ggtagged <- function(data) {
 
   panels <- which(startsWith(gt$layout$name, "panel"))
 
+  # Panels are sorted top to bottom, left to right
+  if (!is.null(lay$ROW) && !is.null(lay$COL)) {
+    panels <- c(matrix(
+      panels,
+      ncol = max(lay$ROW),
+      nrow = max(lay$COL),
+      byrow = TRUE
+    ))
+  }
+
   # Remove empty panels
   empty <- vapply(
     panels,
@@ -270,10 +280,15 @@ assign_tags <- function(plot) {
   lay <- plot$layout$layout
 
   # ggh4x::facet_manual doesn't have ROW and COL.
-  row_column_needed <- any(c("COL", "ROW") %in% toupper(tag_options$tag))
+  row_column <- any(c("COL", "ROW") %in% toupper(tag_options$tag))
   row_column_facet <- any(c("COL", "ROW") %in% sort(names(lay)))
-  if (row_column_needed && !row_column_facet) {
+  if (row_column && !row_column_facet) {
     stop("Row-column taggs not supported for unstructured facets.")
+  }
+
+  if (row_column) {
+    o <- order(lay$ROW, lay$COL)
+    lay <- lay[o, ]
   }
 
   facet_vars <- lay[toupper(tag_options$tag)]

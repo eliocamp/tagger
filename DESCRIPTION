@@ -2,23 +2,24 @@ Package: tagger
 Title: Adds tags to 'ggpot2' facets
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Elio",
-           family = "Campitelli",
-           role = c("cre", "aut"),
-           email = "elio.campitelli@cima.fcen.uba.ar",
+    person("Elio", "Campitelli", , "elio.campitelli@cima.fcen.uba.ar", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-7742-9230"))
-Description: Adds tags to 'ggplot2' facets with a single function and with native 'ggplot2' syntax.
+Description: Adds tags to 'ggplot2' facets with a single function and with
+    native 'ggplot2' syntax.
 License: GPL-3
+Imports: 
+    checkmate,
+    ggplot2,
+    grid,
+    gridtext,
+    gtable
+Suggests: 
+    ggh4x,
+    memoise,
+    testthat (>= 3.0.0),
+    vdiffr
+Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en
 LazyData: true
 Roxygen: list(markdown = TRUE)
-Imports: 
-    gridtext,
-    grid,
-    ggplot2,
-    gtable,
-    checkmate
-Suggests: 
-    memoise
-Config/roxygen2/version: 8.1.0
