@@ -48,8 +48,7 @@
 <span>  tag_pool <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tag_prefix <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  tag_suffix <span class="op">=</span> <span class="st">")"</span>,</span>
-<span>  tag_sep <span class="op">=</span> <span class="st">"."</span>,</span>
-<span>  clip <span class="op">=</span> <span class="st">"on"</span></span>
+<span>  tag_sep <span class="op">=</span> <span class="st">"."</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -68,7 +67,8 @@
 <dd><p>Character indicating the position of the tag. Options are "tl"
 (top-left), "tr" (top-right), "br" (bottom-right) and "bl" (bottom-left).
 Alternatively, for finer control, it can be a list of elements "x", "y",
-"hjust" and "vjust" that define the position of the tag within each panel.</p></dd>
+"hjust",  "vjust" and "clip", that define the position of the tag within
+each panel and whether clipping is "on" or "off".</p></dd>
 
 
 <dt id="arg-tag-levels">tag_levels<a class="anchor" aria-label="anchor" href="#arg-tag-levels"></a></dt>
@@ -94,12 +94,6 @@ tag.</p></dd>
 
 <dt id="arg-tag-sep">tag_sep<a class="anchor" aria-label="anchor" href="#arg-tag-sep"></a></dt>
 <dd><p>A separator between different tag levels</p></dd>
-
-
-<dt id="arg-clip">clip<a class="anchor" aria-label="anchor" href="#arg-clip"></a></dt>
-<dd><p>Should drawing be clipped to the extent of the plot panel? With
-clip set to "on" (the default), tags are not drawn outside of the plotting
-area. Set clip to "off" to draw tags anywhere.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -136,7 +130,7 @@ overridden by setting tagger.panel.tag.text and tagger.panel.tag.background.</p>
 <span class="r-in"><span><span class="co"># Draw tags inside the panel strip with clip = "off" and custom position.</span></span></span>
 <span class="r-in"><span><span class="va">g</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="va">cyl</span> <span class="op">~</span> <span class="va">vs</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu">tag_facets</span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0</span>, y <span class="op">=</span> <span class="fl">1</span>, vjust <span class="op">=</span> <span class="fl">0</span>, hjust <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, clip <span class="op">=</span> <span class="st">"off"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">tag_facets</span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0</span>, y <span class="op">=</span> <span class="fl">1</span>, vjust <span class="op">=</span> <span class="fl">0</span>, hjust <span class="op">=</span> <span class="fl">0</span>, clip <span class="op">=</span> <span class="st">"off"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="tag_facets-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">g</span> <span class="op">+</span> <span class="fu">tag_facets</span><span class="op">(</span>tag_pool <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"one"</span>, <span class="st">"two"</span>, <span class="st">"three"</span>, <span class="st">"four"</span>, <span class="st">"five"</span>, <span class="st">"six"</span><span class="op">)</span>, tag_suffix <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></span>

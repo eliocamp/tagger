@@ -12,8 +12,7 @@ tag_facets(
   tag_pool = NULL,
   tag_prefix = "",
   tag_suffix = ")",
-  tag_sep = ".",
-  clip = "on"
+  tag_sep = "."
 )
 ```
 
@@ -34,8 +33,9 @@ tag_facets(
   Character indicating the position of the tag. Options are "tl"
   (top-left), "tr" (top-right), "br" (bottom-right) and "bl"
   (bottom-left). Alternatively, for finer control, it can be a list of
-  elements "x", "y", "hjust" and "vjust" that define the position of the
-  tag within each panel.
+  elements "x", "y", "hjust", "vjust" and "clip", that define the
+  position of the tag within each panel and whether clipping is "on" or
+  "off".
 
 - tag_levels:
 
@@ -60,12 +60,6 @@ tag_facets(
 - tag_sep:
 
   A separator between different tag levels
-
-- clip:
-
-  Should drawing be clipped to the extent of the plot panel? With clip
-  set to "on" (the default), tags are not drawn outside of the plotting
-  area. Set clip to "off" to draw tags anywhere.
 
 ## Details
 
@@ -103,7 +97,7 @@ g + tag_facets(position = list(x = 0.5, y = 0.5))
 # Draw tags inside the panel strip with clip = "off" and custom position.
 g +
   facet_wrap(cyl ~ vs) +
-  tag_facets(position = list(x = 0, y = 1, vjust = 0, hjust = 0), clip = "off")
+  tag_facets(position = list(x = 0, y = 1, vjust = 0, hjust = 0, clip = "off"))
 
 
 g + tag_facets(tag_pool = c("one", "two", "three", "four", "five", "six"), tag_suffix = "")
