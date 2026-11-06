@@ -1,6 +1,6 @@
-# Get labels asigned to each panel of a tagged plot
+# Get labels assigned to each panel of a tagged plot
 
-Get labels asigned to each panel of a tagged plot
+Get labels assigned to each panel of a tagged plot
 
 ## Usage
 
