@@ -8,16 +8,14 @@
 #' @param position Character indicating the position of the tag. Options are "tl"
 #'  (top-left), "tr" (top-right), "br" (bottom-right) and "bl" (bottom-left).
 #'  Alternatively, for finer control, it can be a list of elements "x", "y",
-#'  "hjust" and "vjust" that define the position of the tag within each panel.
+#'  "hjust",  "vjust" and "clip", that define the position of the tag within
+#'  each panel and whether clipping is "on" or "off".
 #'
 #' @inheritParams patchwork::plot_annotation
 #'
 #' @param tag_pool An optional character vector of user-defined "pool" of tags.
 #' If not `NULL`, it will be used instead of `tag_levels`. Should be at least
 #' as long as the total number of panels.
-#' @param clip Should drawing be clipped to the extent of the plot panel? With
-#' clip set to "on" (the default), tags are not drawn outside of the plotting
-#' area. Set clip to "off" to draw tags anywhere.
 #'
 #' @details
 #'
@@ -45,7 +43,7 @@
 #' # Draw tags inside the panel strip with clip = "off" and custom position.
 #' g +
 #'   facet_wrap(cyl ~ vs) +
-#'   tag_facets(position = list(x = 0, y = 1, vjust = 0, hjust = 0), clip = "off")
+#'   tag_facets(position = list(x = 0, y = 1, vjust = 0, hjust = 0, clip = "off"))
 #'
 #' g + tag_facets(tag_pool = c("one", "two", "three", "four", "five", "six"), tag_suffix = "")
 #' # Thanks to theme inheritance, tags should look acceptable
@@ -68,28 +66,34 @@ tag_facets <- function(
   tag_pool = NULL,
   tag_prefix = "",
   tag_suffix = ")",
-  tag_sep = ".",
-  clip = "on"
+  tag_sep = "."
 ) {
   if (!is.list(position)) {
     assert_choice(position, c("tl", "tr", "bl", "br"))
 
     position <- switch(
       position,
-      tl = list(x = 0, y = 1, hjust = 0, vjust = 1),
-      tr = list(x = 1, y = 1, hjust = 1, vjust = 1),
-      bl = list(x = 0, y = 0, hjust = 0, vjust = 0),
-      br = list(x = 1, y = 0, hjust = 1, vjust = 0),
+      tl = list(x = 0, y = 1, hjust = 0, vjust = 1, clip = "on"),
+      tr = list(x = 1, y = 1, hjust = 1, vjust = 1, clip = "on"),
+      bl = list(x = 0, y = 0, hjust = 0, vjust = 0, clip = "on"),
+      br = list(x = 1, y = 0, hjust = 1, vjust = 0, clip = "on"),
       position
     )
   }
 
   position$hjust <- if (!is.null(position$hjust)) position$hjust else 0.5
   position$vjust <- if (!is.null(position$vjust)) position$vjust else 0.5
+  position$clip <- if (!is.null(position$clip)) position$clip else "on"
 
   checks <- makeAssertCollection()
 
-  assert_list(position, types = "numeric", len = 4, add = checks)
+  assert_list(
+    position,
+    types = c("numeric", "character"),
+    len = 5,
+    add = checks
+  )
+  assert_choice(position$clip, c("on", "off"), add = checks)
   assert_names(
     names(position),
     must.include = c("x", "y", "hjust", "vjust"),
@@ -101,7 +105,6 @@ tag_facets <- function(
   assert_character(tag_prefix, any.missing = FALSE, len = 1, add = checks)
   assert_character(tag_suffix, any.missing = FALSE, len = 1, add = checks)
   assert_character(tag_sep, any.missing = FALSE, len = 1, add = checks)
-  assert_choice(clip, c("on", "off"), add = checks)
 
   tag <- switch(
     tag[1],
@@ -126,8 +129,7 @@ tag_facets <- function(
       open = tag_prefix,
       close = tag_suffix,
       tag_sep = tag_sep,
-      position = position,
-      clip = clip
+      position = position
     ),
     class = "tagger"
   )
@@ -247,7 +249,7 @@ ggplot_gtable.ggplot_build_ggtagged <- function(data) {
       tagGrob,
       t = this_panel$t,
       l = this_panel$l,
-      clip = tag_options$clip,
+      clip = tag_options$position$clip,
       z = 2
     )
   }

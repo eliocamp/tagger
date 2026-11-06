@@ -115,8 +115,7 @@ test_that("clip off works", {
     "clip off",
     wrap +
       tag_facets(
-        clip = "off",
-        position = list(x = 0, y = 1, vjust = 0, hjust = 0)
+        position = list(x = 0, y = 1, vjust = 0, hjust = 0, clip = "off")
       )
   )
 })
