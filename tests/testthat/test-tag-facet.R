@@ -15,6 +15,7 @@ design <- "
  ##C
 "
 manual <- g + ggh4x::facet_manual(~cyl, design)
+
 pdf(NULL) # Prevent Rplot.pdf
 test_that("tagging works", {
   expect_doppelganger("panel tag grid", grid + tag_facets())
@@ -105,6 +106,17 @@ test_that("theming works", {
       theme(
         tagger.panel.tag.text = element_text(color = "red", size = 16),
         tagger.panel.tag.background = element_rect(fill = "purple")
+      )
+  )
+})
+
+test_that("clip off works", {
+  expect_doppelganger(
+    "clip off",
+    wrap +
+      tag_facets(
+        clip = "off",
+        position = list(x = 0, y = 1, vjust = 0, hjust = 0)
       )
   )
 })

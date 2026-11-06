@@ -11,7 +11,8 @@ tag_facets(
   tag_pool = NULL,
   tag_prefix = "",
   tag_suffix = ")",
-  tag_sep = "."
+  tag_sep = ".",
+  clip = "on"
 )
 }
 \arguments{
@@ -24,7 +25,7 @@ tag_facets(
 
 \item{position}{Character indicating the position of the tag. Options are "tl"
 (top-left), "tr" (top-right), "br" (bottom-right) and "bl" (bottom-left).
-Alternatively, for finer control, it can be a list of elements "x", "u",
+Alternatively, for finer control, it can be a list of elements "x", "y",
 "hjust" and "vjust" that define the position of the tag within each panel.}
 
 \item{tag_levels}{A character vector defining the enumeration format to use
@@ -43,6 +44,10 @@ as long as the total number of panels.}
 tag.}
 
 \item{tag_sep}{A separator between different tag levels}
+
+\item{clip}{Should drawing be clipped to the extent of the plot panel? With
+clip set to "on" (the default), tags are not drawn outside of the plotting
+area. Set clip to "off" to draw tags anywhere.}
 }
 \description{
 Adds tags to facets
@@ -68,6 +73,11 @@ g + tag_facets("rc", tag_levels  = c("A", "I"))
 
 # You can get finer control over position.
 g + tag_facets(position = list(x = 0.5, y = 0.5))
+
+# Draw tags inside the panel strip with clip = "off" and custom position.
+g +
+  facet_wrap(cyl ~ vs) +
+  tag_facets(position = list(x = 0, y = 1, vjust = 0, hjust = 0), clip = "off")
 
 g + tag_facets(tag_pool = c("one", "two", "three", "four", "five", "six"), tag_suffix = "")
 # Thanks to theme inheritance, tags should look acceptable

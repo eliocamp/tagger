@@ -25,3 +25,4 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 URL: https://eliocamp.github.io/tagger/
 Config/Needs/website: rmarkdown
+Config/roxygen2/version: 8.1.0
